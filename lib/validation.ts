@@ -1,0 +1,10 @@
+import { z } from 'zod';
+import { kinds, statuses,requestStatuses } from './model';
+const text=z.string().trim();
+export const contentSchema=z.object({title:text.min(1).max(180),slug:text.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(100),status:z.enum(statuses as [string,...string[]]),order:z.number().int().min(0).max(10000),featured:z.boolean(),payload:z.string().max(60000).refine(v=>{try{const p=JSON.parse(v);return p&&typeof p==='object'&&!Array.isArray(p);}catch{return false;}},'Content must be a JSON object')});
+export const formSchema=z.object({name:text.min(2).max(100),email:z.union([z.literal(''),text.email().max(180)]),phone:text.min(7).max(30).regex(/^[+0-9 ()-]+$/),department:text.max(100).default(''),doctor:text.max(100).default(''),date:text.default('').refine(v=>!v||(/^\d{4}-\d{2}-\d{2}$/.test(v)&&v>=new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Kampala',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())),'Choose today or a future date'),message:text.max(1000).default(''),website:z.literal('').default(''),turnstileToken:text.min(1),consent:z.literal(true)});
+export const requestSchema=z.object({status:z.enum(requestStatuses as [string,...string[]]),notes:text.max(5000),unread:z.boolean().optional()});
+export const accessSchema=z.object({userId:text.min(1).max(36),labels:z.array(z.enum(['hospital-admin','hospital-editor','hospital-requests'])).max(3)});
+export const isContent=(kind:string)=>kinds.includes(kind as typeof kinds[number]);
+
+export function validatePayload(p:Record<string,unknown>,kind:string){for(const [key,value] of Object.entries(p)){if(['navigation','footerLinks'].includes(key)){z.array(z.tuple([z.string().min(1).max(80),z.string().refine(v=>/^(\/(?!\/)|https:\/\/|tel:|mailto:)/.test(v),'Use a safe link')])).max(20).parse(value);}else z.string().max(key==='body'?45000:5000).parse(value);}for(const key of ['image','heroImage','document'])if(p[key])z.string().refine(v=>/^(https:\/\/|\/(?!\/))/.test(v),'Use an HTTPS or local media URL').parse(p[key]);}

@@ -1,0 +1,1 @@
+export default function robots(){return {rules:{userAgent:'*',allow:'/',disallow:['/admin','/api']},sitemap:(process.env.SITE_URL||'https://bugema-university-hospital.tuhirirwetroynajuna.chatgpt.site')+'/sitemap.xml'}}

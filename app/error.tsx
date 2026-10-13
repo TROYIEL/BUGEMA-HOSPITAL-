@@ -1,0 +1,1 @@
+'use client';export default function Error({reset}:{reset:()=>void}){return <main className="container page-content"><h1>Unable to load this page</h1><p>Please try again or contact the hospital on 0779100841.</p><button onClick={reset}>Try again</button></main>}

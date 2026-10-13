@@ -1,0 +1,4 @@
+import PublicSite from '@/components/PublicSite';import {publicContent} from '@/lib/appwrite';import {unpack} from '@/lib/model';
+export const dynamic='force-dynamic';
+export async function generateMetadata({params}:{params:Promise<{path:string[]}>}){const {path}=await params;const data=await publicContent();const kind=({departments:'departments',services:'services',doctors:'doctors',news:'articles'} as Record<string,string>)[path[0]];const entry=path[1]?data[kind]?.find(e=>e.slug===path[1]):data.pages.find(e=>e.slug===path[0]);const p=entry?unpack(entry):{};return {title:p.seoTitle||entry?.title||path[0].replaceAll('-',' '),description:p.seoDescription||p.summary||'Patient and visitor information from Bugema University Hospital',alternates:{canonical:'/'+path.join('/')}};}
+export default async function Page({params}:{params:Promise<{path:string[]}>}){return <PublicSite path={(await params).path}/>;}

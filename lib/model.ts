@@ -1,0 +1,12 @@
+export const kinds = ['settings','pages','sections','departments','services','doctors','articles','categories','faqs','patient_information'] as const;
+export const privateKinds = ['appointments','enquiries','audit_logs'] as const;
+export type Kind = typeof kinds[number];
+export type Entry = { $id:string; title:string; slug:string; status:string; order:number; featured:boolean; payload:string; $createdAt?:string; $updatedAt?:string };
+export type Content = { body?:string; summary?:string; image?:string; imageAlt?:string; department?:string; specialty?:string; qualifications?:string; languages?:string; hours?:string; category?:string; seoTitle?:string; seoDescription?:string; document?:string; [key:string]:unknown };
+export const statuses=['draft','published','archived'];
+export const requestStatuses=['New','Contacted','Confirmed','Completed','Cancelled'];
+export function can(labels:string[], area:string){return labels.includes('hospital-admin') || (area==='content' && labels.includes('hospital-editor')) || (area==='requests' && labels.includes('hospital-requests'));}
+export function safeLink(value:string){return /^(https:\/\/|\/(?!\/)|mailto:|tel:)/.test(value)?value:'';}
+export function unpack(entry:Entry):Content {try{return JSON.parse(entry.payload);}catch{return {};}}
+export const defaultSettings={ name:'Bugema University Hospital',address:'Bugema Gazaya Zirobwe Road',phone:'0779100841',email:'bugemauniversityhospital@bugemauniv.com', emergency:'0779100841',hours:'Please call to confirm opening and visiting hours.',heroTitle:'Welcome to Bugema University Hospital',heroText:'Find hospital information, explore our services and contact our team to request an appointment.',heroImage:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1600&q=85',heroAlt:'Illustrative photograph of a hospital corridor; not a photograph of Bugema University Hospital.',ctaTitle:'Let us help you plan your visit.',ctaText:'Contact the hospital team or send an appointment request.',ctaLabel:'Request an Appointment',ctaHref:'/appointments',primaryColor:'#082AE4',secondaryColor:'#C60105',greenColor:'#27834A',navigation:[] as string[][],footerLinks:[] as string[][]};
+export const navigation=[['Home','/'],['About','/about'],['Departments & services','/departments'],['Our doctors','/doctors'],['Patient information','/patient-information'],['News','/news'],['Contact','/contact']];
