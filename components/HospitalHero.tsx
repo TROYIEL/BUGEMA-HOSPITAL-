@@ -1,28 +1,31 @@
 import StethoscopeScene from './StethoscopeScene';
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight, CalendarDays, MapPin, Phone, Stethoscope, ClipboardList } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, CalendarDays, MapPin, Phone, Mail, Stethoscope, ClipboardList } from 'lucide-react';
 import { defaultSettings } from '@/lib/model';
 
 export default function HospitalHero({ settings: s }: { settings: typeof defaultSettings }) {
+  const words=s.heroTitle.trim().split(/\s+/);const accent=words.pop();
   return <>
-    <section className="hospital-hero" aria-labelledby="hospital-hero-title">
+    <section className="hospital-hero reference-hero" aria-labelledby="hospital-hero-title">
       <div className="container hero-layout">
         <div className="hero-editorial">
           <div className="hero-location"><span aria-hidden="true" />BUGEMA · UGANDA</div>
-          <h1 id="hospital-hero-title">{s.heroTitle}</h1>
+          <h1 id="hospital-hero-title">{words.join(' ')} <span>{accent}</span></h1>
           <div className="hero-rule" aria-hidden="true"><span /><span /><span /></div>
           <p className="lead">{s.heroText}</p>
           <div className="actions hero-actions">
-            <Link className="button" href="/appointments"><CalendarDays size={18} aria-hidden="true" />Request an Appointment<ArrowRight size={17} aria-hidden="true" /></Link>
-            <Link className="hero-contact-link" href="/contact">Contact our team<ArrowUpRight size={18} aria-hidden="true" /></Link>
+            <a className="button reference-call" href={'tel:'+s.phone}><Phone size={17} aria-hidden="true"/>Call the Hospital</a>
+            <Link className="button reference-appointment" href="/appointments">Request an Appointment<ArrowUpRight size={17} aria-hidden="true" /></Link>
           </div>
           <div className="hero-urgent"><span className="urgent-icon"><Phone size={20} aria-hidden="true" /></span><div><span>Need urgent assistance?</span><a href={'tel:' + s.emergency}>{s.emergency}</a><small>For emergencies, call directly. Online forms are not emergency services.</small></div></div>
         </div>
         <div className="hero-visual">
-          <span className="hero-outline-cross" aria-hidden="true">+</span>
           <StethoscopeScene/>
-          <div className="hero-visit-panel"><div className="visit-panel-icon"><MapPin size={23} aria-hidden="true" /></div><div><span className="eyebrow">PLAN YOUR VISIT</span><p>{s.address}</p><Link href="/contact">Location & directions<ArrowUpRight size={16} aria-hidden="true" /></Link></div></div>
-          <span className="hero-red-corner" aria-hidden="true" />
+          <a className="reference-contact-orb orb-phone" href={'tel:'+s.phone} aria-label="Call the hospital"><Phone size={23} aria-hidden="true"/></a>
+          <a className="reference-contact-orb orb-email" href={'mailto:'+s.email} aria-label="Email the hospital"><Mail size={23} aria-hidden="true"/></a>
+          <Link className="reference-contact-orb orb-location" href="/contact" aria-label="Hospital location and directions"><MapPin size={23} aria-hidden="true"/></Link>
+          <div className="reference-address"><span className="reference-address-icon"><MapPin size={17} aria-hidden="true"/></span><div><strong>Find us in Bugema</strong><span>{s.address}</span></div></div>
+          <a className="reference-phone-label" href={'tel:'+s.phone}><Phone size={17} aria-hidden="true"/><span><small>Hospital contact</small><strong>{s.phone}</strong></span></a>
         </div>
       </div>
     </section>
