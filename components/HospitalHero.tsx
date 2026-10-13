@@ -1,6 +1,7 @@
+import StethoscopeScene from './StethoscopeScene';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight, CalendarDays, MapPin, Phone, Stethoscope, ClipboardList } from 'lucide-react';
-import { defaultSettings, safeLink } from '@/lib/model';
+import { defaultSettings } from '@/lib/model';
 
 export default function HospitalHero({ settings: s }: { settings: typeof defaultSettings }) {
   return <>
@@ -19,10 +20,7 @@ export default function HospitalHero({ settings: s }: { settings: typeof default
         </div>
         <div className="hero-visual">
           <span className="hero-outline-cross" aria-hidden="true">+</span>
-          <figure className="hero-photograph">
-            <img fetchPriority="high" src={safeLink(s.heroImage)} alt={s.heroAlt} width={900} height={1050} />
-            <figcaption>{s.heroAlt.includes('Illustrative') ? 'Illustrative hospital photograph' : ''}</figcaption>
-          </figure>
+          <StethoscopeScene/>
           <div className="hero-visit-panel"><div className="visit-panel-icon"><MapPin size={23} aria-hidden="true" /></div><div><span className="eyebrow">PLAN YOUR VISIT</span><p>{s.address}</p><Link href="/contact">Location & directions<ArrowUpRight size={16} aria-hidden="true" /></Link></div></div>
           <span className="hero-red-corner" aria-hidden="true" />
         </div>
